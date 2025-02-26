@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 98%;
+    
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    
+    --primary: 142 72% 29%;  /* Base green - more muted */
+    --primary-foreground: 0 0% 98%;
+    
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    
+    --accent: 142 72% 29%;
+    --accent-foreground: 0 0% 98%;
+    
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 142 72% 29%;
+
+    --radius: 0.5rem;
+
+    /* Update button styles */
+    .btn-primary {
+      @apply border border-primary/20 
+             text-primary/80 
+             hover:bg-primary/5 
+             hover:border-primary/50 
+             transition-all 
+             duration-200;
+    }
+
+    .btn-outline {
+      @apply border border-zinc-800/50 
+             hover:bg-zinc-800/20 
+             hover:border-zinc-700 
+             transition-all 
+             duration-200;
+    }
+  }
+
+  body {
+    @apply bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-green-900/20 via-black to-black;
+  }
+}
+
+/* Global button styles */
+@layer components {
+  .button-base {
+    @apply rounded-full px-8 py-2
+           transition-colors
+           disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .button-primary {
+    @apply button-base
+           border border-green-500/20 
+           text-green-500/90 
+           hover:border-green-600 
+           hover:text-green-600;
+  }
+
+  .button-secondary {
+    @apply button-base
+           border border-zinc-800/40
+           text-zinc-400
+           hover:border-zinc-700 
+           hover:text-zinc-300;
+  }
+
+  /* For special accent buttons */
+  .button-accent {
+    @apply button-base
+           border-green-400/30 text-green-400/90
+           hover:border-green-600 hover:text-green-300
+           bg-transparent;
+  }
+}
+
+* {
+  @apply border-border;
+}
+
+body {
+  @apply bg-background text-foreground;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.05;
+    pointer-events: none;
+  }
+}
