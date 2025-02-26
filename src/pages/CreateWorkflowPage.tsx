@@ -101,7 +101,7 @@ export default function CreateWorkflowPage() {
           }
           return prev + 5;
         });
-      }, 100000);
+      }, 10000);
 
       // Upload the file
       const fileData = await uploadFile(selectedFile);
@@ -137,7 +137,7 @@ export default function CreateWorkflowPage() {
       } else {
         clearInterval(interval);
       }
-    }, 100000);
+    }, 10000);
 
     return interval;
   };
@@ -290,7 +290,7 @@ export default function CreateWorkflowPage() {
                   )}
 
                   {currentStep === 2 && (
-                    <div className="space-y-6">
+                    <div className="space-y-12">
                       <FormField
                         control={form.control}
                         name="model_id"
@@ -391,41 +391,43 @@ export default function CreateWorkflowPage() {
                         )}
                       />
 
-                      {isSubmitting && (
-                        <div className="relative">
-                          <Progress 
-                            value={creationProgress} 
-                            className="h-2 transition-all duration-500 ease-in-out"
-                          />
-                          <span className="absolute left-0 top-4 text-xs text-muted-foreground button-primary">
-                            Creating workflow...
-                          </span>
-                        </div>
-                      )}
+                      <div className='space-y-12'>
+                        {isSubmitting && (
+                          <div className="relative">
+                            <Progress 
+                              value={creationProgress} 
+                              className="h-2 transition-all duration-500 ease-in-out"
+                            />
+                            <span className="absolute left-0 top-4 text-xs text-muted-foreground">
+                              Creating workflow...
+                            </span>
+                          </div>
+                        )}
 
-                      <div className="flex justify-between pt-4">
-                        <Button
-                          type="button"
-                          variant="secondary"
-                          onClick={prevStep}
-                          disabled={isSubmitting}
-                        >
-                          Previous Step
-                        </Button>
-                        <Button
-                          type="submit"
-                          className="button-primary"
-                          disabled={isSubmitting}
-                        >
-                          {isSubmitting ? (
-                            <>
-                              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                              Creating...
-                            </>
-                          ) : (
-                            "Create Workflow"
-                          )}
-                        </Button>
+                        <div className="flex justify-between pt-4">
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            onClick={prevStep}
+                            disabled={isSubmitting}
+                          >
+                            Previous Step
+                          </Button>
+                          <Button
+                            type="submit"
+                            className="button-primary"
+                            disabled={isSubmitting}
+                          >
+                            {isSubmitting ? (
+                              <>
+                                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                                Creating...
+                              </>
+                            ) : (
+                              "Create Workflow"
+                            )}
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   )}
