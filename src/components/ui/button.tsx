@@ -9,7 +9,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "border border-green-500/20 text-green-500/90 hover:border-green-600 hover:text-green-600",
+        default: "border border-teal-500/20 text-teal-500/90 hover:border-teal-600 hover:text-teal-600",
         destructive: "border border-red-500/20 text-red-500/90 hover:border-red-600 hover:text-red-600",
         outline: "border border-zinc-800/40 text-zinc-400 hover:border-zinc-700 hover:text-zinc-300",
         secondary: "border border-zinc-800/40 text-zinc-400 hover:border-zinc-700 hover:text-zinc-300",

@@ -74,13 +74,6 @@ export default function LandingPage() {
           </motion.div>
         </motion.div>
       </div>
-
-      {/* Hide Spline watermark */}
-      <style>{`
-        iframe + div {
-          display: none !important;
-        }
-      `}</style>
     </div>
   );
 } 

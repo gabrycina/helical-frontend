@@ -13,7 +13,7 @@
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
     
-    --primary: 142 72% 29%;  /* Base green - more muted */
+    --primary: 173 80% 40%;  /* teal-500 */
     --primary-foreground: 0 0% 98%;
     
     --secondary: 240 3.7% 15.9%;
@@ -22,7 +22,7 @@
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 240 5% 64.9%;
     
-    --accent: 142 72% 29%;
+    --accent: 173 80% 40%;  /* teal-500 */
     --accent-foreground: 0 0% 98%;
     
     --destructive: 0 62.8% 30.6%;
@@ -30,7 +30,7 @@
     
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
-    --ring: 142 72% 29%;
+    --ring: 173 80% 40%;  /* teal-500 */
 
     --radius: 0.5rem;
 
@@ -54,7 +54,7 @@
   }
 
   body {
-    @apply bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-green-900/20 via-black to-black;
+    @apply bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-teal-500/20 via-black to-black;
   }
 }
 
@@ -68,10 +68,10 @@
 
   .button-primary {
     @apply button-base
-           border border-green-500/20 
-           text-green-500/90 
-           hover:border-green-600 
-           hover:text-green-600;
+           border border-teal-500/20 
+           text-teal-500
+           hover:border-teal-500/40 
+           hover:text-teal-400;
   }
 
   .button-secondary {
@@ -82,11 +82,10 @@
            hover:text-zinc-300;
   }
 
-  /* For special accent buttons */
   .button-accent {
     @apply button-base
-           border-green-400/30 text-green-400/90
-           hover:border-green-600 hover:text-green-300
+           border-teal-500/30 text-teal-500/90
+           hover:border-teal-400 hover:text-teal-400
            bg-transparent;
   }
 }

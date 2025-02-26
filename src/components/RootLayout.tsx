@@ -7,10 +7,9 @@ export default function RootLayout() {
     <>
       <div className="min-h-screen text-white flex flex-col">
         <div className="fixed inset-0 noise" />
-        
         <Navbar />
         <div className="w-full flex-grow flex justify-center relative">
-          <main className="w-8/12 px-6 py-8">
+          <main className="w-8/12 px-6 py-16">
             <Outlet />
           </main>
         </div>

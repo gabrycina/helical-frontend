@@ -194,9 +194,9 @@ export default function CreateWorkflowPage() {
                   <div className={cn(
                     "h-10 w-10 rounded-full flex items-center justify-center text-sm font-medium border transition-colors",
                     currentStep === step.id 
-                      ? "bg-primary border-primary text-primary-foreground" 
+                      ? "bg-primary/40 border-primary/60 text-primary-foreground" 
                       : currentStep > step.id
-                      ? "bg-primary/10 border-primary/20 text-primary"
+                      ? "bg-primary/40 border-primary/40 text-primary"
                       : "bg-zinc-900 border-zinc-800 text-zinc-400"
                   )}>
                     {step.id}
@@ -397,7 +397,7 @@ export default function CreateWorkflowPage() {
                             value={creationProgress} 
                             className="h-2 transition-all duration-500 ease-in-out"
                           />
-                          <span className="absolute left-0 top-4 text-xs text-muted-foreground">
+                          <span className="absolute left-0 top-4 text-xs text-muted-foreground button-primary">
                             Creating workflow...
                           </span>
                         </div>
