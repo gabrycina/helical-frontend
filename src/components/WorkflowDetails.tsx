@@ -35,6 +35,7 @@ export default function WorkflowDetails() {
     try {
       setRefreshing(true);
       const data = await getWorkflowStatus(id);
+      console.log(data)
       setWorkflow(data);
       setError(null);
     } catch (err: any) {
@@ -64,16 +65,15 @@ export default function WorkflowDetails() {
     };
   }, [id, workflow?.status]);
 
-  // Status badge render function
-  const renderStatus = (status: string) => {
+  const renderStatusBadge= (status: string) => {
     const variant = WORKFLOW_STATUS_VARIANTS[status as WorkflowStatus] || {
       className: "bg-slate-500/15 text-slate-500 hover:bg-slate-500/25",
       icon: null,
       label: status
     };
-
+  
     const Icon = variant.icon;
-
+  
     return (
       <Badge 
         variant="outline"
@@ -83,12 +83,15 @@ export default function WorkflowDetails() {
         )}
       >
         <span className="flex items-center">
-          {Icon && <Icon className="mr-1.5 h-3.5 w-3.5" />}
+          {Icon && <Icon className={cn(
+            "mr-1.5 h-3.5 w-3.5",
+            status === 'processing' && "animate-spin"
+          )} />}
           <span className="capitalize">{variant.label}</span>
         </span>
       </Badge>
     );
-  };
+  }; 
 
   if (loading && !workflow) {
     return (
@@ -175,8 +178,7 @@ export default function WorkflowDetails() {
                   {workflow.workflow_id}
                 </CardDescription>
               </div>
-              <div className="flex flex-col items-end gap-2">
-                {renderStatus(workflow.status)}
+              <div className="flex flex-row items-center gap-2 mb-2">
                 <Button
                   variant="outline"
                   size="sm"
@@ -192,6 +194,7 @@ export default function WorkflowDetails() {
                     </>
                   )}
                 </Button>
+                {renderStatusBadge(workflow.status)}
               </div>
             </div>
           </CardHeader>
@@ -222,7 +225,7 @@ export default function WorkflowDetails() {
                             <p className="text-sm">{formatBytes(result.file_size)}</p>
                           </div>
                           <Button variant="outline" asChild>
-                            <a href={getDownloadUrl(workflow.workflow_id, result.result_id)} download>
+                            <a href={getDownloadUrl(workflow.id, result.result_id)} download>
                               <DownloadCloud className="mr-2 h-4 w-4" />
                               Download
                             </a>

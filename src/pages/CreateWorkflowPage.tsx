@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Card, 
@@ -30,7 +30,7 @@ import { ArrowLeft, Upload, AlertCircle, Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { createSingleCellWorkflow, uploadFile } from '@/lib/api';
+import { createSingleCellWorkflow, uploadFile, getWorkflowStatus } from '@/lib/api';
 import { toast } from 'sonner';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
@@ -55,11 +55,14 @@ export default function CreateWorkflowPage() {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [file, setFile] = useState<File | null>(null);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
-  const [creationProgress, setCreationProgress] = useState(0);
+  const [workflowId, setWorkflowId] = useState<string | null>(null);
+  const [progress, setProgress] = useState(0);
+  const [status, setStatus] = useState<string | null>(null);
 
   // Initialize form
   const form = useForm<z.infer<typeof formSchema>>({
@@ -87,30 +90,14 @@ export default function CreateWorkflowPage() {
     if (!selectedFile) return;
     
     setFile(selectedFile);
+    setUploadedFile(selectedFile);
     setIsUploading(true);
     setUploadProgress(0);
     setUploadError(null);
 
     try {
-      // Simulate upload progress
-      const progressInterval = setInterval(() => {
-        setUploadProgress((prev) => {
-          if (prev >= 95) {
-            clearInterval(progressInterval);
-            return prev;
-          }
-          return prev + 5;
-        });
-      }, 10000);
-
       // Upload the file
       const fileData = await uploadFile(selectedFile);
-      
-      // Clear interval and set progress to 100%
-      clearInterval(progressInterval);
-      setUploadProgress(100);
-      
-      // Update form
       form.setValue("input_file", fileData.filename);
       
       toast(
@@ -125,42 +112,54 @@ export default function CreateWorkflowPage() {
     }
   };
 
-  const simulateProgress = () => {
-    setCreationProgress(0);
-    const steps = [15, 35, 45, 65, 85, 95];
-    let currentStep = 0;
-
-    const interval = setInterval(() => {
-      if (currentStep < steps.length) {
-        setCreationProgress(steps[currentStep]);
-        currentStep++;
-      } else {
-        clearInterval(interval);
+  useEffect(() => {
+    if (!workflowId) return;
+  
+    console.log("hello")
+    const pollInterval = setInterval(async () => {
+      try {
+        const status = await getWorkflowStatus(workflowId);
+        
+        // Convert progress from 0-1 to 0-100
+        setProgress(status.progress * 100);
+        setStatus(status.status);
+        
+        if (status.status === 'completed' || status.status === 'failed') {
+          clearInterval(pollInterval);
+          if (status.status === 'completed') {
+            toast.success("Workflow completed successfully");
+            navigate(`/workflows/${workflowId}`);
+          } else {
+            toast.error(`Workflow failed: ${status.error}`);
+          }
+        }
+      } catch (error) {
+        console.error('Error polling workflow status:', error);
       }
-    }, 10000);
-
-    return interval;
-  };
+    }, 1000); // Poll every second
+    
+    return () => clearInterval(pollInterval);
+  }, [workflowId]);
 
   // Form submission
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      setIsSubmitting(true);
-      const progressInterval = simulateProgress();
+      if (!uploadedFile) {
+        throw new Error("No file selected");
+      }
 
-      const workflow = await createSingleCellWorkflow(values);
+      setIsSubmitting(true);
+
+      const result = await createSingleCellWorkflow(uploadedFile, values.model_id);
       
-      clearInterval(progressInterval);
-      setCreationProgress(100);
+      setWorkflowId(result.workflow_id);
       
-      toast(
-        "Workflow created", {
+      toast("Workflow created", {
         description: "Your workflow has been successfully created.",
       });
       
-      navigate(`/workflows/${workflow.workflow_id}`);
+      navigate(`/workflows/${result.workflow_id}`);
     } catch (error: any) {
-      setCreationProgress(0);
       console.error("Failed to create workflow:", error);
       toast.error("Error", {
         description: error.message || "Failed to create workflow. Please try again.",
@@ -395,11 +394,11 @@ export default function CreateWorkflowPage() {
                         {isSubmitting && (
                           <div className="relative">
                             <Progress 
-                              value={creationProgress} 
+                              value={progress} 
                               className="h-2 transition-all duration-500 ease-in-out"
                             />
                             <span className="absolute left-0 top-4 text-xs text-muted-foreground">
-                              Creating workflow...
+                              {progress.toFixed(progress)}% - {status || "Creating workflow..."}
                             </span>
                           </div>
                         )}

@@ -23,19 +23,30 @@ export const getModels = async (modelType?: string) => {
   return response.data;
 };
 
-export const createSingleCellWorkflow = async (data: {
-  input_file: string;
-  model_id: string;
-  embedding_mode: string;
-}) => {
-  const response = await api.post('/workflows/single-cell', data);
-  return response.data;
-};
+export async function createSingleCellWorkflow(file: File, modelId: string) {
+  const formData = new FormData();
+  formData.append('file', file);
+  
+  const response = await fetch(`${API_URL}/workflows/single-cell?model_id=${modelId}`, {
+    method: 'POST',
+    body: formData,
+  });
+  
+  return await response.json();
+}
 
-export const getWorkflowStatus = async (workflowId: string) => {
-  const response = await api.get(`/workflows/${workflowId}`);
-  return response.data;
-};
+export async function getWorkflowStatus(workflowId: string) {
+  const response = await fetch(`${API_URL}/workflows/${workflowId}`);
+  if (!response.ok) {
+    throw new Error('Failed to get workflow status');
+  }
+  const data = await response.json();
+  return {
+    ...data,
+    // Ensure progress is a number between 0-100
+    progress: data.progress || 0
+  };
+}
 
 export const getDownloadUrl = (workflowId: string, resultId: string) => {
   return `${API_URL}/workflows/${workflowId}/results/${resultId}/download`;

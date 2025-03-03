@@ -47,15 +47,15 @@ export default function HomePage() {
     fetchWorkflows();
   }, []);
 
-  const renderStatusBadge = (status: string) => {
+  const renderStatusBadge= (status: string) => {
     const variant = WORKFLOW_STATUS_VARIANTS[status as WorkflowStatus] || {
       className: "bg-slate-500/15 text-slate-500 hover:bg-slate-500/25",
       icon: null,
       label: status
     };
-
+  
     const Icon = variant.icon;
-
+  
     return (
       <Badge 
         variant="outline"
@@ -65,12 +65,15 @@ export default function HomePage() {
         )}
       >
         <span className="flex items-center">
-          {Icon && <Icon className="mr-1.5 h-3.5 w-3.5" />}
+          {Icon && <Icon className={cn(
+            "mr-1.5 h-3.5 w-3.5",
+            status === 'processing' && "animate-spin"
+          )} />}
           <span className="capitalize">{variant.label}</span>
         </span>
       </Badge>
     );
-  };
+  }; 
 
   return (
     <PageTransition>
